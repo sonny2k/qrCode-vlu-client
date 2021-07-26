@@ -59,9 +59,11 @@ class FormCommon extends Component {
     let data = { ...this.state.data };
     data[input.name] = input.value;
 
+    this.setState({ errors });
+
     data = this.doChange(input, data);
 
-    this.setState({ data, errors });
+    this.setState({ data });
   };
 
   handleDatePickerChange = (update) => {

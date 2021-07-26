@@ -8,8 +8,8 @@ import Logout from "views/Logout.js";
 const dashboardRoutes = [
   {
     path: "/dashboard",
-    name: "Dashboard",
-    icon: "nc-icon nc-chart-pie-35",
+    name: "Statistical",
+    icon: "nc-icon nc-chart-pie-36",
     component: Dashboard,
     permission: "admin",
     layout: "/admin",
@@ -33,7 +33,7 @@ const dashboardRoutes = [
   {
     path: "/classes",
     name: "Classes List",
-    icon: "nc-icon nc-alien-33",
+    icon: "nc-icon nc-layers-3",
     component: Classes,
     layout: "/admin",
   },

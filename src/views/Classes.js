@@ -60,10 +60,6 @@ function Classes() {
         setLoading(false);
         setClasses(classes);
 
-        if (_.isEmpty({})) {
-          console.log(selectedClass);
-        }
-
         if (!_.isEmpty(selectedClass?._id)) {
           const result = await classes.find((x) => x._id === selectedClass._id);
           if (!_.isEqual(result, prevSelected)) {
@@ -259,7 +255,7 @@ function Classes() {
                             setModalImport(true);
                           }}
                         >
-                          <i className="fas fa-plus-circle"></i> Import Class
+                          <i className="fas fa-file-import"></i> Import Class
                         </Button>
                       </React.Fragment>
                     )}

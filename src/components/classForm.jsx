@@ -46,7 +46,7 @@ class ClassForm extends FormCommon {
     endDate: Joi.date().required().label("End Date"),
     room: Joi.string().required().label("Room"),
     dayOfWeek: Joi.number().min(2).max(8).required().label("Day Of Week"),
-    numOfWeek: Joi.number().min(1).max(20).required().label("Number Of Week"),
+    numOfWeek: Joi.number().min(1).max(25).required().label("Number Of Week"),
     session: Joi.string().required().label("Session"),
     semesterId: Joi.string().required().label("Semester"),
     lecturerMail: Joi.string()
