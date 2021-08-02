@@ -146,7 +146,7 @@ class AttendanceModal extends FormCommon {
                   Attendance {selectedLesson?.name}
                 </Modal.Title>
               </Modal.Header>
-              <Modal.Body>
+              <Modal.Body style={{ overflowX: "auto" }}>
                 <Row>
                   <Col className="qrCode">
                     {qrCodeImage && (

@@ -13,7 +13,7 @@ import ClassService from "services/classService";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import ManualAttendanceTable from "./manualAttendanceTable";
 
-const ManualAttendance = ({ myClass, lesson, show, onUpdateClass }) => {
+const ManualAttendance = ({ myClass, lesson, onUpdateClass }) => {
   const [studentsList, setStudentList] = React.useState([
     ...myClass.lessons[lesson.order - 1].students,
   ]);
@@ -29,23 +29,14 @@ const ManualAttendance = ({ myClass, lesson, show, onUpdateClass }) => {
   const [isHandling, setIsHandling] = React.useState(false);
 
   React.useEffect(() => {
+    loadData();
+  }, [myClass]);
+
+  const loadData = () => {
     setLoading(false);
-    if (show) {
-      let timer1 = setInterval(async () => {
-        const { data: newClass } = await ClassService.getClass(myClass._id);
-        const students = newClass.lessons[lesson.order - 1].students;
-        setStudentList(students);
-
-        if (!_.isEqual(newClass, myClass)) {
-          onUpdateClass(newClass);
-        }
-      }, 1000);
-
-      return () => {
-        clearTimeout(timer1);
-      };
-    }
-  }, []);
+    const students = myClass.lessons[lesson.order - 1].students;
+    setStudentList(students);
+  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

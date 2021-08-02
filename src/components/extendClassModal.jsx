@@ -28,7 +28,7 @@ const ExtendClassModal = ({
             Class {selectedClass?.name} - {selectedClass?.classTermId}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ overflowX: "auto" }}>
           <Tabs defaultActiveKey="attendance" id="uncontrolled-tab-example">
             <Tab eventKey="attendance" title="Attendance">
               <Lesson myClass={selectedClass} onUpdateClass={onUpdateClass} />

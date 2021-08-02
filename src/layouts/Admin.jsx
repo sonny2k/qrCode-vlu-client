@@ -13,6 +13,8 @@ import sidebarImage from "assets/img/sidebar-3.jpg";
 
 import auth from "services/authService";
 
+import { socket, SocketContext } from "../services/socketIo";
+
 function Admin() {
   const [image, setImage] = React.useState(sidebarImage);
   const [color, setColor] = React.useState("black");
@@ -53,7 +55,7 @@ function Admin() {
   }, [location]);
 
   return (
-    <>
+    <SocketContext.Provider value={socket}>
       <div className="wrapper">
         <Sidebar
           color={color}
@@ -81,7 +83,7 @@ function Admin() {
         image={image}
         setImage={(image) => setImage(image)}
       />
-    </>
+    </SocketContext.Provider>
   );
 }
 

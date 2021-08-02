@@ -52,7 +52,6 @@ class StudentForm extends FormCommon {
       onUpdateStudent(data);
       toast.success("Successfully");
     } catch (err) {
-      // console.log(err);
       toast.error(err.response?.data);
     }
   };

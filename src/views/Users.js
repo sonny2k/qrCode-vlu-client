@@ -17,6 +17,8 @@ import ModalConfirm from "components/common/modalConfirm";
 
 import auth from "../services/authService";
 
+import { SocketContext } from "../services/socketIo";
+
 function Users() {
   const [usersList, setUsers] = React.useState([]);
   const [faculties, setFaculties] = React.useState([]);
@@ -42,6 +44,8 @@ function Users() {
 
   const [isLoading, setLoading] = React.useState(true);
 
+  const socket = React.useContext(SocketContext);
+
   React.useEffect(() => {
     async function getDataFromApi() {
       try {
@@ -51,12 +55,22 @@ function Users() {
         setLoading(false);
         setUsers(newUsers);
       } catch (error) {
-        console.log("hello");
+        toast.error(error?.response?.data);
       }
     }
 
     getDataFromApi();
-  }, [selectedUser]);
+
+    socket.on("getNewUsers", (users) => {
+      setUsers(users);
+    });
+
+    socket.on("deleteUser", (users) => {
+      setUsers(users);
+      setModalShow(false);
+      setConfirmDeleteDialog(false);
+    });
+  }, [socket]);
 
   const handleShowConfirmDialog = (user) => {
     setSelectedUser(user);

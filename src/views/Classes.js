@@ -21,9 +21,7 @@ import ModalConfirm from "components/common/modalConfirm";
 import ExtendClassModal from "components/extendClassModal";
 
 import auth from "services/authService";
-
-import { io } from "socket.io-client";
-const classSocket = io(`${process.env.REACT_APP_API_URL}/classes`);
+import { SocketContext } from "../services/socketIo";
 
 function Classes() {
   const [classes, setClasses] = React.useState([]);
@@ -54,6 +52,7 @@ function Classes() {
   const [modalExtendClass, setModalExtendClass] = React.useState(false);
 
   const [isLoading, setLoading] = React.useState(true);
+  const socket = React.useContext(SocketContext);
 
   React.useEffect(() => {
     async function getDataFromApi() {
@@ -76,7 +75,21 @@ function Classes() {
     }
 
     getDataFromApi();
-  }, []);
+
+    socket.on("getNewClasses", (classes) => {
+      setClasses(classes);
+    });
+
+    socket.on("deleteClasses", (classes) => {
+      setClasses(classes);
+      setModalShow(false);
+      setModalExtendClass(false);
+    });
+
+    socket.on("newStudent", (myClass) => {
+      handleClassUpdate(myClass);
+    });
+  }, [socket]);
 
   const handleShowConfirmDialog = (myClass) => {
     setSelectedClass(myClass);

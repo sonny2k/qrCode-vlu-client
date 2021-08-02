@@ -53,9 +53,6 @@ const Students = ({ myClass, onUpdateStudent }) => {
   const handleStudentDelete = async (student) => {
     const originalStudent = [...studentsList];
 
-    // const newStudents = originalStudent.filter((m) => m.mail !== student.mail);
-    // setStudentList(newStudents);
-
     try {
       const { data } = await ClassService.deleteStudentInClass(
         myClass,

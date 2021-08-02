@@ -81,13 +81,13 @@ const Statistical = ({ myClass }) => {
   };
 
   const getPagedData = () => {
-    let filtered = myClass.lessons;
+    let filtered = myClass?.lessons ;
     // if (searchQuery) {
     //   filtered = myClass.lessons.filter((x) =>
     //     x..toLowerCase().startsWith(searchQuery.toLowerCase())
     //   );
     // }
-    const newLesson = paginate(filtered[0].students, currentPage, pageSize);
+    const newLesson = paginate(filtered[0]?.students, currentPage, pageSize);
 
     return { totalCount: filtered[0].students.length, data: newLesson };
   };

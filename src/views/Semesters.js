@@ -16,6 +16,8 @@ import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import ModalForm from "../components/common/modalForm";
 import SemesterForm from "../components/semesterForm";
 
+import { SocketContext } from "../services/socketIo";
+
 function Semesters() {
   const [semestersList, setSemesters] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -31,6 +33,8 @@ function Semesters() {
 
   const [isLoading, setLoading] = React.useState(true);
 
+  const socket = React.useContext(SocketContext);
+
   React.useEffect(() => {
     async function getDataFromApi() {
       try {
@@ -39,12 +43,22 @@ function Semesters() {
         setLoading(false);
         setSemesters(newSemesters);
       } catch (error) {
-        console.log("hello");
+        toast.error(error?.response?.data);
       }
     }
 
     getDataFromApi();
-  }, [selectedSemester]);
+
+    socket.on("getNewSemesters", (semesters) => {
+      setSemesters(semesters);
+    });
+
+    socket.on("deleteSemester", (semesters) => {
+      setSemesters(semesters);
+      setModalShow(false);
+      setConfirmDeleteDialog(false);
+    });
+  }, [socket]);
 
   const handleShowConfirmDialog = (semester) => {
     setSelectedSemester(semester);
