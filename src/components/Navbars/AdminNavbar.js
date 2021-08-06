@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 
 import routes from "routes.js";
@@ -7,7 +7,6 @@ import auth from "services/authService";
 
 function Header() {
   const location = useLocation();
-  const history = useHistory();
 
   const user = auth.getCurrentUser();
 

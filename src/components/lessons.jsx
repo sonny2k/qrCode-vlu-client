@@ -4,10 +4,8 @@ import LessonTable from "./lessonTable";
 
 import TableScrollbar from "react-table-scrollbar";
 
-import ClassService from "services/classService";
 import LessonService from "services/lessonService";
 
-import { Modal } from "react-bootstrap";
 import AttendanceModal from "./attendanceModal";
 import { toast } from "react-toastify";
 

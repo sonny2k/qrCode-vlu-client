@@ -25,22 +25,12 @@ import { SocketContext } from "../services/socketIo";
 
 function Classes() {
   const [classes, setClasses] = React.useState([]);
-  const [semesters, setSemesters] = React.useState([]);
-  const [lecturers, setLecturers] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [selectedSemester, setSelectedSemester] = React.useState({
-    _id: "",
-    name: "All Semester",
-  });
-  const [selectedLecturer, setSelectedLecturer] = React.useState({
-    _id: "",
-    name: "All j",
-  });
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [pageSize, setPageSize] = React.useState(10);
+  const [pageSize] = React.useState(10);
   const [sortColumn, setSortColumn] = React.useState({
-    path: "semester.name",
-    order: "asc",
+    path: "lastUpdated",
+    order: "desc",
   });
   const [selectedClass, setSelectedClass] = React.useState({});
   const [prevSelected, setPrevSelect] = React.useState({});
@@ -134,35 +124,8 @@ function Classes() {
   };
 
   const handleClassUpdate = (myClass) => {
-    let newClass = [...classes];
-    const classData = newClass.find((x) => x._id === myClass._id);
-    if (classData) {
-      newClass.map((x) => {
-        if (x._id === myClass._id) {
-          x.classTermId = myClass.classTermId;
-          x.name = myClass.name;
-          x.numOfCredits = myClass.numOfCredits;
-          x.courseType = myClass.courseType;
-          x.schoolYear = myClass.schoolYear;
-          x.startDate = myClass.startDate;
-          x.endDate = myClass.endDate;
-          x.room = myClass.room;
-          x.session = myClass.session;
-          x.dayOfWeek = myClass.dayOfWeek;
-          x.numOfStudents = myClass.numOfStudents;
-          x.numOfWeek = myClass.numOfWeek;
-          x.semester = myClass.semester;
-          x.lecturer = myClass.lecturer;
-          x.lessons = myClass.lessons;
-        }
-      });
-    } else {
-      newClass = [myClass, ...classes];
-    }
-    setClasses(newClass);
     setSelectedClass(myClass);
     setModalShow(false);
-    // setModalAttendance(false);
   };
 
   const handleImportExcel = (newClasses) => {
@@ -176,8 +139,6 @@ function Classes() {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    setSelectedSemester(semesters[0]);
-    setSelectedLecturer(lecturers[0]);
     setCurrentPage(1);
   };
 

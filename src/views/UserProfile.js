@@ -3,7 +3,6 @@ import React from "react";
 import Joi from "joi";
 
 // react-bootstrap components
-import auth from "../services/authService";
 import UserService from "../services/userService";
 import FacultyService from "../services/facultyService";
 import RoleService from "../services/roleService";
@@ -11,17 +10,7 @@ import { toast } from "react-toastify";
 
 import { SocketContext } from "../services/socketIo";
 
-import {
-  Badge,
-  Button,
-  Card,
-  Form,
-  Navbar,
-  Nav,
-  Container,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 
 import FormCommon from "../components/common/form";
 
@@ -76,7 +65,6 @@ class MyUser extends FormCommon {
 
   async populateUsers() {
     try {
-      const userId = auth.getCurrentUser()._id;
       const { data: user } = await UserService.getUser();
       this.setState({ data: this.mapToViewModel(user) });
     } catch (error) {

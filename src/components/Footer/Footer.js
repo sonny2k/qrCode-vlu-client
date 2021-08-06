@@ -18,10 +18,7 @@
 import React, { Component } from "react";
 import { Container } from "react-bootstrap";
 
-import { NavLink, useHistory } from "react-router-dom";
-
-import { Nav } from "react-bootstrap";
-import Statistical from "./../statistical";
+import { NavLink } from "react-router-dom";
 
 class Footer extends Component {
   render() {

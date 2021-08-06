@@ -8,9 +8,8 @@ import LoadingPage from "../components/common/loadingPage";
 import { paginate } from "../utils/paginate";
 
 import LessonService from "services/lessonService";
-import ClassService from "services/classService";
 
-import { Button, Card, Container, Row, Col } from "react-bootstrap";
+import { Card, Container, Row, Col } from "react-bootstrap";
 import ManualAttendanceTable from "./manualAttendanceTable";
 
 const ManualAttendance = ({ myClass, lesson, onUpdateClass }) => {
@@ -19,7 +18,7 @@ const ManualAttendance = ({ myClass, lesson, onUpdateClass }) => {
   ]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [pageSize, setPageSize] = React.useState(7);
+  const [pageSize] = React.useState(7);
   const [sortColumn, setSortColumn] = React.useState({
     path: "status",
     order: "desc",
