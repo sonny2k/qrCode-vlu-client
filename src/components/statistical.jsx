@@ -1,11 +1,13 @@
 import React from "react";
 
 import { Bar } from "react-chartjs-2";
-import { Card } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 
 import { paginate } from "../utils/paginate";
 
 import StatisticalTable from "./statisticalTable";
+
+import ReactExport from "react-data-export";
 
 const Statistical = ({ myClass }) => {
   const [listLesson, setLessons] = React.useState([]);
@@ -72,6 +74,57 @@ const Statistical = ({ myClass }) => {
     return { totalCount: filtered[0].students.length, data: newLesson };
   };
 
+  const ExcelFile = ReactExport.ExcelFile;
+  const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+
+  const DataSet = [
+    {
+      columns: [
+        {
+          title: "Student Mail",
+          style: { font: { sz: "18", bold: true } },
+          width: { wpx: 125 },
+        }, // width in pixels
+        {
+          title: "Student Name",
+          style: { font: { sz: "18", bold: true } },
+          width: { wch: 30 },
+        }, // width in characters
+        ...myClass.lessons.map((lesson) => {
+          return {
+            title: lesson.name,
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 100 },
+          };
+        }), // width in pixels
+      ],
+      data: myClass.lessons[0].students.map((x, index) => [
+        { value: x.mail, style: { font: { sz: "14" } } },
+        { value: x.name, style: { font: { sz: "14" } } },
+        ...myClass.lessons.map((y) => {
+          return {
+            value:
+              y.students[index].status != "Not Attended"
+                ? "Attended"
+                : "Not Attended",
+            style:
+              y.students[index].status != "Not Attended"
+                ? {
+                    font: { color: { rgb: "ffffff" } },
+                    fill: { patternType: "solid", fgColor: { rgb: "4bd909" } },
+                  }
+                : {
+                    font: { color: { rgb: "ffffff" } },
+                    fill: { patternType: "solid", fgColor: { rgb: "3461eb" } },
+                  },
+          };
+        }),
+      ]),
+    },
+  ];
+
+  console.log(myClass);
+
   const { totalCount, data: newLesson } = getPagedData();
 
   return (
@@ -84,7 +137,19 @@ const Statistical = ({ myClass }) => {
           {totalCount === 0 ? (
             <p>Data empty</p>
           ) : (
-            <StatisticalTable lessons={myClass.lessons} />
+            <>
+              <StatisticalTable lessons={myClass.lessons} />
+              <ExcelFile
+                filename="my statistical"
+                element={
+                  <Button className="btn-fill btn-wd" variant="success">
+                    <i className="fas fa-file-export"></i> Export Excel
+                  </Button>
+                }
+              >
+                <ExcelSheet dataSet={DataSet} name="Statistical" />
+              </ExcelFile>
+            </>
           )}
         </Card.Body>
       </Card>

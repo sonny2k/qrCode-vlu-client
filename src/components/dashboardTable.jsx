@@ -52,17 +52,6 @@ const DashboardTable = ({ classes, searchQueryStudent }) => {
               <td key={`${item._id}className`} style={{ width: "300px" }}>
                 {item.name}
               </td>
-              {searchQueryStudent && (
-                <td key={`${item._id}studentMail`} style={{ width: "300px" }}>
-                  {
-                    item.lessons[0].students.filter((x) =>
-                      x.mail
-                        .toLowerCase()
-                        .startsWith(searchQueryStudent.toLowerCase())
-                    )[0].mail
-                  }
-                </td>
-              )}
               {item.lessons.map((lesson) => (
                 <td key={`${item._id}${lesson._id}`}>{`${
                   lesson.numOfAttendance

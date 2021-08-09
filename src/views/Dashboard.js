@@ -18,6 +18,8 @@ import Pagination from "../components/common/pagination";
 
 import SearchBox from "../components/common/searchBox";
 
+import ReactExport from "react-data-export";
+
 class Dashboard extends FormCommon {
   state = {
     data: {
@@ -28,11 +30,11 @@ class Dashboard extends FormCommon {
     },
     semesters: [],
     classes: [],
+    myStatisticalData: [],
     errors: {},
     isHandling: false,
     currentPage: 1,
     searchQuery: "",
-    searchQueryStudent: "",
     pageSize: 10,
     sortColumn: { path: "name", order: "asc" },
     isLoading: true,
@@ -62,7 +64,7 @@ class Dashboard extends FormCommon {
   }
 
   async populateClasses() {
-    const { data: classes } = await ClassService.getClasses();
+    let { data: classes } = await ClassService.getClasses();
     this.setState({ classes, isLoading: false });
   }
 
@@ -157,54 +159,6 @@ class Dashboard extends FormCommon {
       }
     });
 
-    if (searchQueryStudent) {
-      let newArray = [];
-      filtered.map(async (x) => {
-        const result = x.lessons.reduce((newArray, item) => {
-          item.students.map((y) => {
-            if (newArray[y.mail] == null) {
-              newArray[y.mail] = {
-                mail: y.mail,
-                numOfAttendance: y.status === "Not Attended" ? 0 : 1,
-                numOfNonAttendance: y.status === "Not Attended" ? 1 : 0,
-              };
-            } else {
-              newArray[y.mail] = {
-                mail: y.mail,
-                numOfAttendance:
-                  newArray[y.mail].numOfAttendance +
-                  (y.status === "Not Attended" ? 0 : 1),
-                numOfNonAttendance:
-                  newArray[y.mail].numOfNonAttendance +
-                  (y.status === "Not Attended" ? 1 : 0),
-              };
-            }
-          });
-          console.log("new Array", newArray);
-          return newArray;
-        }, {});
-
-        // result.map((item) => {
-        //   newArray.push({
-        //     classTermId: x.classTermId,
-        //     semester: x.semester,
-        //     nam: x.name,
-        //     mail: item.mail,
-        //     statistical: `${item.numOfAttendance}/${
-        //       item.numOfAttendance + item.numOfNonAttendance
-        //     }`,
-        //   });
-        //   console.log("ket qua la: ", newArray);
-        // });
-      });
-
-      filtered = filtered.filter((x) =>
-        x.lessons[0].students.find((y) =>
-          y.mail.toLowerCase().startsWith(searchQueryStudent.toLowerCase())
-        )
-      );
-    }
-
     if (searchQuery) {
       filtered = filtered.filter(
         (x) =>
@@ -223,6 +177,9 @@ class Dashboard extends FormCommon {
   };
 
   render() {
+    const ExcelFile = ReactExport.ExcelFile;
+    const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+
     const { totalCount, data: newClasses } = this.getPagedData();
 
     const {
@@ -234,6 +191,171 @@ class Dashboard extends FormCommon {
       searchQuery,
       searchQueryStudent,
     } = this.state;
+
+    const DataSet = [
+      {
+        columns: [
+          {
+            title: "SemesterId",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 125 },
+          }, // width in pixels
+          {
+            title: "Class Term ID",
+            style: { font: { sz: "18", bold: true } },
+            width: { wch: 30 },
+          }, // width in characters
+          {
+            title: "Class Name",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 100 },
+          }, // width in pixels
+          {
+            title: "Lesson 1",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 2",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 3",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 4",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in characters
+          {
+            title: "Lesson 5",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 6",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 7",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 8",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 9",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 10",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 11",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 12",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 13",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 14",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+
+          {
+            title: "Lesson 15",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+
+          {
+            title: "Lesson 16",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 17",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 18",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 19",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 20",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 21",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 22",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 23",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 24",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+          {
+            title: "Lesson 25",
+            style: { font: { sz: "18", bold: true } },
+            width: { wpx: 110 },
+          }, // width in pixels
+        ],
+        data: newClasses.map((item) => [
+          { value: item.semester.symbol, style: { font: { sz: "14" } } },
+          { value: item.classTermId, style: { font: { sz: "14" } } },
+          { value: item.name, style: { font: { sz: "14" } } },
+          ...item.lessons.map((lesson) => {
+            return {
+              value: `${lesson.numOfAttendance}/${
+                lesson.numOfNonAttendance + lesson.numOfAttendance
+              }`,
+              style: { font: { sz: "14" } },
+            };
+          }),
+          ,
+        ]),
+      },
+    ];
+
+    console.log(DataSet);
 
     return (
       <React.Fragment>
@@ -263,33 +385,34 @@ class Dashboard extends FormCommon {
                             )}
                           </Col>
                           <Col>
-                            <Button
-                              className="btn-fill btn-wd"
-                              variant="success"
-                            >
-                              <i className="fas fa-file-export"></i> Export
-                              Excel
-                            </Button>
+                            {newClasses.length !== 0 ? (
+                              <ExcelFile
+                                filename="myStatiscal"
+                                element={
+                                  <Button
+                                    className="btn-fill btn-wd"
+                                    variant="success"
+                                  >
+                                    <i className="fas fa-file-export"></i>{" "}
+                                    Export Excel
+                                  </Button>
+                                }
+                              >
+                                <ExcelSheet
+                                  dataSet={DataSet}
+                                  name="my export"
+                                />
+                              </ExcelFile>
+                            ) : null}
                           </Col>
                         </Row>
                       </Col>
                     </Row>
-                    <Row>
-                      <Col>
-                        <SearchBox
-                          value={searchQuery}
-                          onChange={this.handleSearch}
-                          placeholder="Search with class name, semester..."
-                        />
-                      </Col>
-                      <Col>
-                        <SearchBox
-                          value={searchQueryStudent}
-                          onChange={this.handleSearchStudent}
-                          placeholder="Search with student name..."
-                        />
-                      </Col>
-                    </Row>
+                    <SearchBox
+                      value={searchQuery}
+                      onChange={this.handleSearch}
+                      placeholder="Search with class name ..."
+                    />
 
                     <LoadingPage isLoading={isLoading}>
                       {totalCount === 0 ? (
