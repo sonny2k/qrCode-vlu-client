@@ -22,9 +22,20 @@ import ExtendClassModal from "components/extendClassModal";
 
 import auth from "services/authService";
 import { SocketContext } from "../services/socketIo";
+import SecureLS from "secure-ls";
+
+var ls = new SecureLS();
 
 function Classes() {
-  const [classes, setClasses] = React.useState([]);
+  let classesStore;
+  try {
+    classesStore = ls.get("classesList");
+  } catch (error) {
+    ls.remove("classesList");
+  }
+
+  const [classes, setClasses] = React.useState(classesStore || []);
+
   const [currentPage, setCurrentPage] = React.useState(1);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [pageSize] = React.useState(10);
@@ -41,7 +52,9 @@ function Classes() {
   const [confirmDeleteDialog, setConfirmDeleteDialog] = React.useState(false);
   const [modalExtendClass, setModalExtendClass] = React.useState(false);
 
-  const [isLoading, setLoading] = React.useState(true);
+  const [isLoading, setLoading] = React.useState(
+    ls.get("classesList") ? false : true
+  );
   const socket = React.useContext(SocketContext);
 
   React.useEffect(() => {
@@ -49,6 +62,9 @@ function Classes() {
       try {
         let { data: classes } = await ClassService.getClasses();
 
+        if (JSON.stringify(ls.get("classesList")) != JSON.stringify(classes)) {
+          ls.set("classesList", classes);
+        }
         setLoading(false);
         setClasses(classes);
 
@@ -68,12 +84,14 @@ function Classes() {
 
     socket.on("getNewClasses", (classes) => {
       setClasses(classes);
+      ls.set("classesList", classes);
     });
 
     socket.on("deleteClasses", (classes) => {
       setClasses(classes);
       setModalShow(false);
       setModalExtendClass(false);
+      ls.set("classesList", classes);
     });
 
     socket.on("newStudent", (myClass) => {

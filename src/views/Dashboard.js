@@ -20,6 +20,10 @@ import SearchBox from "../components/common/searchBox";
 
 import ReactExport from "react-data-export";
 
+import SecureLS from "secure-ls";
+
+var ls = new SecureLS();
+
 class Dashboard extends FormCommon {
   state = {
     data: {
@@ -59,12 +63,32 @@ class Dashboard extends FormCommon {
   });
 
   async populateSemesters() {
-    const { data: semesters } = await SemesterService.getSemesters();
+    let semesters;
+    try {
+      semesters = ls.get("semestersList");
+    } catch (error) {
+      ls.remove("usersList");
+    }
+
+    if (!semesters) {
+      const { data } = await SemesterService.getSemesters();
+      semesters = data;
+    }
     this.setState({ semesters });
   }
 
   async populateClasses() {
-    let { data: classes } = await ClassService.getClasses();
+    let classes;
+    try {
+      classes = ls.get("classesList");
+    } catch (error) {
+      ls.remove("classesList");
+    }
+
+    if (!classes) {
+      const { data } = await ClassService.getClasses();
+      classes = data;
+    }
     this.setState({ classes, isLoading: false });
   }
 
@@ -150,7 +174,9 @@ class Dashboard extends FormCommon {
         endYear <= this.state.data.endYear
       ) {
         if (this.state.data.symbol !== "All Semesters") {
-          if (x.semester.symbol === this.state.data.symbol) {
+          if (
+            x.semester.name.toLowerCase() === this.state.data.name.toLowerCase()
+          ) {
             return x;
           }
         } else {

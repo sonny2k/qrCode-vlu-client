@@ -7,11 +7,10 @@ import Logout from "views/Logout.js";
 
 const dashboardRoutes = [
   {
-    path: "/dashboard",
-    name: "Statistical",
-    icon: "nc-icon nc-chart-pie-36",
-    component: Dashboard,
-    permission: "admin",
+    path: "/profile",
+    name: "User Profile",
+    icon: "nc-icon nc-circle-09",
+    component: UserProfile,
     layout: "/admin",
   },
   {
@@ -38,10 +37,11 @@ const dashboardRoutes = [
     layout: "/admin",
   },
   {
-    path: "/profile",
-    name: "User Profile",
-    icon: "nc-icon nc-circle-09",
-    component: UserProfile,
+    path: "/dashboard",
+    name: "Statistical",
+    icon: "nc-icon nc-chart-pie-36",
+    component: Dashboard,
+    permission: "admin",
     layout: "/admin",
   },
   {

@@ -25,7 +25,7 @@ const ClassTable = ({
     { path: "room", label: "Room" },
     { path: "lecturer.name", label: "Lecturer" },
     { path: "numOfStudents", label: "Num Students" },
-    { path: "semester.name", label: "Semester" },
+    { path: "semester.symbol", label: "Semester" },
     { path: "editor", label: "Editor" },
     { path: "lastUpdated", label: "Last Edited" },
 

@@ -17,9 +17,19 @@ import ModalForm from "../components/common/modalForm";
 import SemesterForm from "../components/semesterForm";
 
 import { SocketContext } from "../services/socketIo";
+import SecureLS from "secure-ls";
+
+var ls = new SecureLS();
 
 function Semesters() {
-  const [semestersList, setSemesters] = React.useState([]);
+  let semesterStore;
+  try {
+    semesterStore = ls.get("semesterList");
+  } catch (error) {
+    ls.remove("semesterList");
+  }
+
+  const [semestersList, setSemesters] = React.useState(semesterStore || []);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [pageSize] = React.useState(10);
@@ -31,7 +41,9 @@ function Semesters() {
   const [modalShow, setModalShow] = React.useState(false);
   const [confirmDeleteDialog, setConfirmDeleteDialog] = React.useState(false);
 
-  const [isLoading, setLoading] = React.useState(true);
+  const [isLoading, setLoading] = React.useState(
+    ls.get("semesterList") ? false : true
+  );
 
   const socket = React.useContext(SocketContext);
 
@@ -40,6 +52,11 @@ function Semesters() {
       try {
         let { data: newSemesters } = await SemesterService.getSemesters();
 
+        if (
+          JSON.stringify(ls.get("semesterList")) != JSON.stringify(newSemesters)
+        ) {
+          ls.set("semesterList", newSemesters);
+        }
         setLoading(false);
         setSemesters(newSemesters);
       } catch (error) {
@@ -51,12 +68,14 @@ function Semesters() {
 
     socket.on("getNewSemesters", (semesters) => {
       setSemesters(semesters);
+      ls.set("semesterList", semesters);
     });
 
     socket.on("deleteSemester", (semesters) => {
       setSemesters(semesters);
       setModalShow(false);
       setConfirmDeleteDialog(false);
+      ls.set("semesterList", semesters);
     });
   }, [socket]);
 

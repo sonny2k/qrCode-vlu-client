@@ -19,8 +19,19 @@ import auth from "../services/authService";
 
 import { SocketContext } from "../services/socketIo";
 
+import SecureLS from "secure-ls";
+
+var ls = new SecureLS();
+
 function Users() {
-  const [usersList, setUsers] = React.useState([]);
+  let usersStore;
+  try {
+    usersStore = ls.get("usersList");
+  } catch (error) {
+    ls.remove("usersList");
+  }
+
+  const [usersList, setUsers] = React.useState(usersStore || []);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [pageSize] = React.useState(10);
@@ -32,7 +43,9 @@ function Users() {
   const [modalShow, setModalShow] = React.useState(false);
   const [confirmDeleteDialog, setConfirmDeleteDialog] = React.useState(false);
 
-  const [isLoading, setLoading] = React.useState(true);
+  const [isLoading, setLoading] = React.useState(
+    ls.get("usersList") ? false : true
+  );
 
   const socket = React.useContext(SocketContext);
 
@@ -40,8 +53,13 @@ function Users() {
     async function getDataFromApi() {
       try {
         let { data: newUsers } = await UserService.getUsers();
+
         const currentUser = auth.getCurrentUser();
-        newUsers.filter((x) => x._id !== currentUser?._id);
+        newUsers = newUsers.filter((x) => x._id !== currentUser?._id);
+
+        if (JSON.stringify(ls.get("usersList")) != JSON.stringify(newUsers)) {
+          ls.set("usersList", newUsers);
+        }
         setLoading(false);
         setUsers(newUsers);
       } catch (error) {
@@ -53,12 +71,14 @@ function Users() {
 
     socket.on("getNewUsers", (users) => {
       setUsers(users);
+      ls.set("usersList", users);
     });
 
     socket.on("deleteUser", (users) => {
       setUsers(users);
       setModalShow(false);
       setConfirmDeleteDialog(false);
+      ls.set("usersList", users);
     });
   }, [socket]);
 
