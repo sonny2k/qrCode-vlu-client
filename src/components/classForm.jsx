@@ -9,8 +9,21 @@ import ClassService from "../services/classService";
 // react-bootstrap components
 import { Form } from "react-bootstrap";
 import { toast } from "react-toastify";
+import SecureLS from "secure-ls";
 
 const Joi = require("joi").extend(require("@joi/date"));
+
+var ls = new SecureLS();
+
+let semesterStore, lecturerStore;
+
+try {
+  semesterStore = ls.get("semesterList");
+  lecturerStore = ls.get("usersList");
+} catch (error) {
+  ls.remove("semesterList");
+  ls.remove("usersList");
+}
 
 class ClassForm extends FormCommon {
   state = {
@@ -29,8 +42,8 @@ class ClassForm extends FormCommon {
       semesterId: "",
       lecturerMail: "",
     },
-    semesters: [],
-    lecturers: [],
+    semesters: semesterStore || [],
+    lecturers: lecturerStore || [],
     errors: {},
     isHandling: false,
   };
@@ -56,17 +69,27 @@ class ClassForm extends FormCommon {
   });
 
   async populateSemesters() {
-    const { data: semesters } = await SemesterService.getSemesters();
+    if (!semesterStore) {
+      const { data: semesters } = await SemesterService.getSemesters();
+      ls.set("semesterList", semesters);
+      semesterStore = semesters;
+    }
+
     const myData = { ...this.state.data };
-    myData["semesterId"] = semesters[0]?._id;
-    this.setState({ semesters, data: myData });
+    myData["semesterId"] = semesterStore[0]?._id;
+    this.setState({ semesters: semesterStore, data: myData });
   }
 
   async populateLecturer() {
-    const { data: lecturers } = await UserService.getUsers();
+    if (!lecturerStore) {
+      const { data: lecturers } = await UserService.getUsers();
+      ls.set("usersList", lecturers);
+      lecturerStore = lecturers;
+    }
+
     const myData = { ...this.state.data };
-    myData["lecturerMail"] = lecturers[0]?.mail;
-    this.setState({ lecturers, data: myData });
+    myData["lecturerMail"] = lecturerStore[0]?.mail;
+    this.setState({ lecturers: lecturerStore, data: myData });
   }
 
   populateClasses() {
@@ -76,7 +99,7 @@ class ClassForm extends FormCommon {
   }
 
   async componentDidMount() {
-    await this.populateSemesters();
+    this.populateSemesters();
     this.populateClasses();
   }
 
