@@ -408,7 +408,9 @@ const ModalImportClass = ({ titleHeader, onHandleImport, ...otherProps }) => {
           ) : (
             <>
               <p className="mt-3">Please import valid xlsx</p>
-              <a onClick={handleDownloadTemplate}>Download template</a>
+              <a href="" className="clickable" onClick={handleDownloadTemplate}>
+                Download template
+              </a>
             </>
           )}
         </Modal.Body>

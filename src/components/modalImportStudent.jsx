@@ -239,7 +239,7 @@ const ModalImportStudent = ({
           ) : (
             <>
               <p className="mt-3">Please import valid xlsx</p>
-              <a href="" onClick={handleDownloadTemplate}>
+              <a href="" className="clickable" onClick={handleDownloadTemplate}>
                 Download template
               </a>
             </>
