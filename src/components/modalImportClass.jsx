@@ -249,23 +249,33 @@ const ModalImportClass = ({ titleHeader, onHandleImport, ...otherProps }) => {
     setIsHandling(true);
 
     let newRows = [...rowsShow];
-    let importedClasses = [];
 
-    for (var i = 0; i <= rows.length - 1; i++) {
-      try {
-        const { data } = await ClassService.saveClass(rows[i]);
-        importedClasses.push(data);
-        newRows[i] = { status: "Success", ...rows[i] };
-      } catch (error) {
-        toast.error(error.response?.data);
-        newRows[i] = { status: "Failed", ...rows[i] };
-      }
-      setRowsShow(newRows);
-    }
+    // for (var i = 0; i <= rows.length - 1; i++) {
+    //   try {
+    //     const { data } = await ClassService.saveClass(rows[i]);
+    //     importedClasses.push(data);
+    //     newRows[i] = { status: "Success", ...rows[i] };
+    //   } catch (error) {
+    //     toast.error(error.response?.data);
+    //     newRows[i] = { status: "Failed", ...rows[i] };
+    //   }
+    //   setRowsShow(newRows);
+    // a
 
-    if (importedClasses.length !== 0) {
-      onHandleImport(importedClasses);
-    }
+    await Promise.all(
+      rows.map(async (x, index) => {
+        try {
+          await ClassService.saveClass(x);
+
+          newRows[index] = { status: "Success", ...x };
+          setRowsShow(newRows);
+        } catch (error) {
+          toast.error(error.response?.data);
+          newRows[index] = { status: "Failed", ...x };
+          setRowsShow(newRows);
+        }
+      })
+    );
 
     setIsHandling(false);
     setIsFinish(true);

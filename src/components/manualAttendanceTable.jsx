@@ -6,6 +6,7 @@ import { Button } from "react-bootstrap";
 
 const ManualAttendanceTable = ({
   students,
+  selectedStudent,
   sortColumn,
   isHandling,
   onManualAttendance,
@@ -16,9 +17,6 @@ const ManualAttendanceTable = ({
     {
       path: "name",
       label: "Display Name",
-      content: (student) => (
-        <Link to={`/users/${student._id}`}>{student.name}</Link>
-      ),
     },
     { path: "mail", label: "Mail" },
     {
@@ -35,7 +33,7 @@ const ManualAttendanceTable = ({
           variant={student.status === "Not Attended" ? "success" : "warning"}
           onClick={() => onManualAttendance(student)}
         >
-          {isHandling ? (
+          {isHandling && student.mail === selectedStudent.mail ? (
             "Waiting"
           ) : (
             <>

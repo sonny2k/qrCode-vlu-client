@@ -72,27 +72,42 @@ const ModalImportStudent = ({
     let newRows = [...rows];
     let importStudents;
 
-    for (var i = 0; i <= rows.length - 1; i++) {
-      try {
-        const { data } = await ClassService.saveStudentInClass(myClass, {
-          studentId: "Student not login yet",
-          name: "Student not login yet",
-          mail: rows[i].mail,
-        });
-        importStudents = data;
-        newRows[i] = { status: "Success", ...rows[i] };
-        // await setRowsShow(newRows);
-      } catch (error) {
-        toast.error(error.response?.data);
-        newRows[i] = { status: "Failed", ...rows[i] };
-      }
-      setRowsShow(newRows);
-    }
+    // for (var i = 0; i <= rows.length - 1; i++) {
+    //   try {
+    //     const { data } = await ClassService.saveStudentInClass(myClass, {
+    //       studentId: "Student not login yet",
+    //       name: "Student not login yet",
+    //       mail: rows[i].mail,
+    //     });
+    //     importStudents = data;
+    //     newRows[i] = { status: "Success", ...rows[i] };
+    //     // await setRowsShow(newRows);
+    //   } catch (error) {
+    //     toast.error(error.response?.data);
+    //     newRows[i] = { status: "Failed", ...rows[i] };
+    //   }
+    //   setRowsShow(newRows);
+    // }
 
-    if (importStudents) {
-      onHandleImport(importStudents);
-    }
+    await Promise.all(
+      rows.map(async (x, index) => {
+        try {
+          await ClassService.saveStudentInClass(myClass, {
+            studentId: "Student not login yet",
+            name: "Student not login yet",
+            mail: x.mail,
+          });
 
+          newRows[index] = { status: "Success", ...x };
+          setRowsShow(newRows);
+        } catch (error) {
+          toast.error(error.response?.data);
+          newRows[index] = { status: "Failed", ...x };
+          setRowsShow(newRows);
+        }
+      })
+    );
+    setRowsShow(newRows);
     setIsHandling(false);
     setIsFinish(true);
   };

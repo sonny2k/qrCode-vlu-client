@@ -114,16 +114,14 @@ const Statistical = ({ myClass }) => {
                     fill: { patternType: "solid", fgColor: { rgb: "4bd909" } },
                   }
                 : {
-                    font: { color: { rgb: "ffffff" } },
-                    fill: { patternType: "solid", fgColor: { rgb: "3461eb" } },
+                    font: { color: { rgb: "000000" } },
+                    fill: { tternType: "solid", fgColor: { rgb: "ffffff" } },
                   },
           };
         }),
       ]),
     },
   ];
-
-  console.log(myClass);
 
   const { totalCount, data: newLesson } = getPagedData();
 

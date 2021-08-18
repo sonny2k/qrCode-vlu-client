@@ -26,6 +26,7 @@ const ManualAttendance = ({ myClass, lesson, onUpdateClass }) => {
 
   const [isLoading, setLoading] = React.useState(true);
   const [isHandling, setIsHandling] = React.useState(false);
+  const [selectedStudent, setSelectedStudent] = React.useState({});
 
   React.useEffect(() => {
     loadData();
@@ -33,7 +34,7 @@ const ManualAttendance = ({ myClass, lesson, onUpdateClass }) => {
 
   const loadData = () => {
     setLoading(false);
-    const students = myClass.lessons[lesson.order - 1].students;
+    let students = myClass.lessons[lesson.order - 1].students;
     setStudentList(students);
   };
 
@@ -52,12 +53,15 @@ const ManualAttendance = ({ myClass, lesson, onUpdateClass }) => {
 
   const handleManualAttendance = async (student) => {
     try {
+      setSelectedStudent(student);
       setIsHandling(true);
       const { data: newClass } = await LessonService.takeAttendance(
         myClass,
         lesson,
         student.mail
       );
+
+      student.isHandling = false;
 
       onUpdateClass(newClass);
 
@@ -112,6 +116,7 @@ const ManualAttendance = ({ myClass, lesson, onUpdateClass }) => {
                     <ManualAttendanceTable
                       students={newStudents}
                       sortColumn={sortColumn}
+                      selectedStudent={selectedStudent}
                       isHandling={isHandling}
                       onManualAttendance={handleManualAttendance}
                       onSort={handleSort}
