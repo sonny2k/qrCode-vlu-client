@@ -16,7 +16,6 @@ const UserTable = ({
     {
       path: "name",
       label: "Display Name",
-      content: (user) => <Link to={`/users/${user._id}`}>{user.name}</Link>,
     },
     { path: "mail", label: "Mail" },
     { path: "degree", label: "Degree" },

@@ -19,7 +19,6 @@ const ClassTable = ({
     {
       path: "name",
       label: "DisplayName",
-      content: (user) => <Link to={`/users/${user._id}`}>{user.name}</Link>,
     },
     { path: "courseType", label: "Course Type" },
     { path: "room", label: "Room" },

@@ -16,9 +16,6 @@ const SemesterTable = ({
     {
       path: "name",
       label: "Display Name",
-      content: (semester) => (
-        <Link to={`/semesters/${semester._id}`}>{semester.name}</Link>
-      ),
     },
     { path: "symbol", label: "Symbol" },
     { path: "editor", label: "Last Editor" },
